@@ -16,6 +16,7 @@ class _CreateToDoViewState extends State<CreateToDoView> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           FloatingActionButton(
+            heroTag: "",
             onPressed: () {},
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
@@ -27,7 +28,9 @@ class _CreateToDoViewState extends State<CreateToDoView> {
             height: 10,
           ),
           FloatingActionButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushNamed(context, '/create_task_details');
+            },
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
             ),
