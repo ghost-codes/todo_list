@@ -24,8 +24,28 @@ class LTextThemes {
     fontWeight: FontWeight.w700,
     fontFamily: "OpenSans",
   );
+  static const TextStyle tinyFadedAnoteGrey = TextStyle(
+    color: LColors.grey,
+    fontSize: 13,
+    fontWeight: FontWeight.w700,
+    fontFamily: "OpenSans",
+  );
   static const TextStyle bigTitleWhite = TextStyle(
-    color: LColors.white, fontSize: 20, fontWeight: FontWeight.w600,
-    // fontFamily: ,
+    color: LColors.white,
+    fontSize: 20,
+    fontWeight: FontWeight.w600,
+    fontFamily: "OpenSans",
+  );
+  static const TextStyle bigTitleBlack = TextStyle(
+    color: LColors.black,
+    fontSize: 20,
+    fontWeight: FontWeight.w600,
+    fontFamily: "OpenSans",
+  );
+  static const TextStyle mediumTitleBlack = TextStyle(
+    color: LColors.black,
+    fontSize: 16,
+    fontWeight: FontWeight.w600,
+    fontFamily: "OpenSans",
   );
 }
