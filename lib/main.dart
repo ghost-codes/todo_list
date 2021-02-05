@@ -20,6 +20,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/splash': (context) => SplashScreen(),
         '/': (context) => HomeView(),
+        '/create_task': (context) => CreateToDoView(),
       },
     );
   }

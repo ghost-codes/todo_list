@@ -35,32 +35,61 @@ class _ToDoItemCardState extends State<ToDoItemCard> {
             child: Row(
               children: [
                 //Checkbox
-                Container(
-                  width: 25,
-                  child: AspectRatio(
-                    aspectRatio: 1,
-                    child: Stack(
-                      children: [
-                        Container(
-                          margin: EdgeInsets.all(2),
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              style: BorderStyle.solid,
-                              color: LColors.grey,
-                              width: 1,
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      widget.toDo.isDone = !widget.toDo.isDone;
+                    });
+                    // print("Hey");
+                  },
+                  child: Container(
+                    width: 25,
+                    child: AspectRatio(
+                      aspectRatio: 1,
+                      child: widget.toDo.isDone
+                          ? Container(
+                              margin: EdgeInsets.all(2),
+                              padding: EdgeInsets.all(.5),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                color: LColors.primaryColor,
+                              ),
+                              child: Icon(
+                                Icons.check,
+                                color: LColors.white,
+                                size: 15,
+                              ),
+                              // width: 25,
+                            )
+                          : Stack(
+                              children: [
+                                Container(
+                                  margin: EdgeInsets.all(2),
+                                  decoration: BoxDecoration(
+                                    border: widget.toDo.isDone
+                                        ? Border.all()
+                                        : Border.all(
+                                            style: BorderStyle.solid,
+                                            color: LColors.grey,
+                                            width: 1,
+                                          ),
+                                    borderRadius: BorderRadius.circular(5),
+                                    color: widget.toDo.isDone
+                                        ? LColors.primaryColor
+                                        : Colors.transparent,
+                                  ),
+                                  // width: 25,
+                                ),
+                                Positioned(
+                                  bottom: 0,
+                                  right: 0,
+                                  child: CircleAvatar(
+                                    radius: 5,
+                                    backgroundColor: LColors.primaryColor,
+                                  ),
+                                ),
+                              ],
                             ),
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          // width: 25,
-                        ),
-                        Positioned(
-                            bottom: 0,
-                            right: 0,
-                            child: CircleAvatar(
-                              radius: 5,
-                              backgroundColor: LColors.primaryColor,
-                            )),
-                      ],
                     ),
                   ),
                 ),
