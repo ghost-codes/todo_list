@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:todo_list/core/util/appColors.dart';
 import 'package:todo_list/core/util/textThemes.dart';
 import 'package:todo_list/ui/widgets/activityCard.dart';
@@ -102,22 +103,31 @@ class _CreateToDoViewState extends State<CreateToDoView> {
                     );
                   }
                   if (index == 7) {
-                    return Container(
-                      margin: EdgeInsets.only(right: 20, top: 10, bottom: 10),
-                      child: AspectRatio(
-                        aspectRatio: 1,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: LColors.secondaryPale,
-                            boxShadow: [
-                              BoxShadow(
-                                  blurRadius: 7,
-                                  offset: Offset(2, 4),
-                                  color: LColors.black.withOpacity(0.2))
-                            ],
-                            borderRadius: BorderRadius.circular(15),
+                    return GestureDetector(
+                      onTap: () {
+                        showDialog(
+                            context: context,
+                            builder: (context) => SfDateRangePicker(
+                                  todayHighlightColor: LColors.primaryColor,
+                                ));
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(right: 20, top: 10, bottom: 10),
+                        child: AspectRatio(
+                          aspectRatio: 1,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: LColors.secondaryPale,
+                              boxShadow: [
+                                BoxShadow(
+                                    blurRadius: 7,
+                                    offset: Offset(2, 4),
+                                    color: LColors.black.withOpacity(0.2))
+                              ],
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: Icon(Icons.add, color: LColors.white),
                           ),
-                          child: Icon(Icons.add, color: LColors.white),
                         ),
                       ),
                     );

@@ -4,19 +4,18 @@
 
 import 'dart:convert';
 
-ToDo toDoFromJson(String str) => ToDo.fromJson(json.decode(str));
+Client clientFromJson(String str) => Client.fromJson(json.decode(str));
 
-String clientToJson(ToDo data) => json.encode(data.toJson());
+String clientToJson(Client data) => json.encode(data.toJson());
 
-class ToDo {
-  ToDo({
+class Client {
+  Client({
     this.id,
     this.title,
     this.description,
     this.datetime,
     this.duration,
     this.activity,
-    this.isDone,
   });
 
   int id;
@@ -25,16 +24,14 @@ class ToDo {
   String datetime;
   String duration;
   String activity;
-  bool isDone;
 
-  factory ToDo.fromJson(Map<String, dynamic> json) => ToDo(
+  factory Client.fromJson(Map<String, dynamic> json) => Client(
         id: json["id"],
         title: json["title"],
         description: json["description"],
         datetime: json["datetime"],
         duration: json["duration"],
         activity: json["activity"],
-        isDone: json["isDone"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -44,6 +41,5 @@ class ToDo {
         "datetime": datetime,
         "duration": duration,
         "activity": activity,
-        "isDone": isDone,
       };
 }

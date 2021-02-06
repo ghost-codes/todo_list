@@ -106,7 +106,7 @@ class _ToDoItemCardState extends State<ToDoItemCard> {
                       ),
                       SizedBox(height: 5),
                       Text(
-                        "${widget.toDo.timeFrame}",
+                        "${widget.toDo.activity}",
                         style: LTextThemes.tinyFadedAnotePrim,
                       ),
                     ],

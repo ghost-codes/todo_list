@@ -1,16 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:todo_list/core/BLoCs/homeBloc.dart';
 import 'package:todo_list/core/models/todo.dart';
 import 'package:todo_list/core/util/appColors.dart';
 import 'package:todo_list/core/util/textThemes.dart';
 import 'package:todo_list/ui/widgets/exportWidgets.dart';
 
 class HomeView extends StatefulWidget {
+  HomeBloc bloc;
+
+  HomeView({this.bloc});
+
+  static Widget create(BuildContext context) {
+    return Provider<HomeBloc>(
+      create: (_) => HomeBloc(),
+      child: Consumer<HomeBloc>(builder: (context, bloc, _) {
+        return HomeView(bloc: bloc);
+      }),
+    );
+  }
+
   @override
-  _HomeViewState createState() => _HomeViewState();
+  _HomeViewState createState() => _HomeViewState(bloc: bloc);
 }
 
 class _HomeViewState extends State<HomeView> {
+  HomeBloc bloc;
+  _HomeViewState({this.bloc});
+
   @override
   void initState() {
     SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
@@ -37,60 +57,32 @@ class _HomeViewState extends State<HomeView> {
                       decoration: BoxDecoration(
                         color: LColors.white,
                       ),
-                      child: ListView.builder(
-                          scrollDirection: Axis.vertical,
-                          itemCount: 6,
-                          itemBuilder: (context, index) {
-                            List<ToDo> todoList = [
-                              ToDo(
-                                  title: "Hope",
-                                  description: "Dorkenoo",
-                                  category: "School",
-                                  timeFrame: "11:00 - 12:00"),
-                              ToDo(
-                                  title: "Hope",
-                                  description: "Dorkenoo",
-                                  category: "School",
-                                  timeFrame: "11:00 - 12:00"),
-                              ToDo(
-                                  title: "Hope",
-                                  description: "Dorkenoo",
-                                  category: "School",
-                                  timeFrame: "11:00 - 12:00"),
-                              ToDo(
-                                  title: "Hope",
-                                  description: "Dorkenoo",
-                                  category: "School",
-                                  timeFrame: "11:00 - 12:00"),
-                              ToDo(
-                                  title: "Hope",
-                                  description: "Dorkenoo",
-                                  category: "School",
-                                  timeFrame: "11:00 - 12:00"),
-                              ToDo(
-                                  title: "Hope",
-                                  description: "Dorkenoo",
-                                  category: "School",
-                                  timeFrame: "11:00 - 12:00"),
-                            ];
-                            // if (index == 0) {
-                            //   return Container(
-                            //     color: Colors.black,
-                            //     height: 70,
-                            //     child: ListView.builder(
-                            //       itemCount: 10,
-                            //       itemBuilder: (context, index) {
-                            //         return Container(
-                            //           color: LColors.grey,
-                            //           width: 50,
-                            //           margin: EdgeInsets.all(10),
-                            //         );
-                            //       },
-                            //     ),
-                            //   );
-                            // }
-                            return ToDoItemCard(toDo: todoList[index]);
-                          }),
+                      child: StreamBuilder<List<ToDo>>(
+                        stream: bloc.todoList,
+                        initialData: [],
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return Center(
+                              child: SpinKitChasingDots(
+                                color: LColors.primaryColor,
+                                size: 50,
+                              ),
+                            );
+                          }
+                          if (snapshot.data.length == 0) {
+                            return Center(
+                                child: Text("No Tasks Here",
+                                    style: LTextThemes.mediumTitleBlack));
+                          }
+                          return ListView.builder(
+                            scrollDirection: Axis.vertical,
+                            itemCount: snapshot.data.length,
+                            itemBuilder: (context, index) {
+                              return ToDoItemCard(toDo: snapshot.data[index]);
+                            },
+                          );
+                        },
+                      ),
                     ),
                   ),
                 ),
@@ -103,6 +95,7 @@ class _HomeViewState extends State<HomeView> {
   }
 
   Widget topWithDate() {
+    DateTime now = DateTime.now();
     return Padding(
       padding: EdgeInsets.all(15),
       child: Column(
@@ -119,7 +112,8 @@ class _HomeViewState extends State<HomeView> {
                 ),
               ),
               Text(
-                "Today Date",
+                // "\${now.day} \${DateFormat(\"MMMM\").parse(now.month)}",
+                "${now.day}",
                 style: LTextThemes.smallBodywhite,
               ),
               IconButton(
@@ -140,7 +134,12 @@ class _HomeViewState extends State<HomeView> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text("Today", style: LTextThemes.bigTitleWhite),
-                  Text("8 tasks", style: LTextThemes.tinyFadedAnotePrim),
+                  StreamBuilder<List<ToDo>>(
+                      stream: bloc.todoList,
+                      builder: (context, snapshot) {
+                        return Text("${(snapshot.data)?.length == null} tasks",
+                            style: LTextThemes.tinyFadedAnotePrim);
+                      }),
                 ],
               ),
               FlatButton(
