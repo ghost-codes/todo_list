@@ -31,7 +31,7 @@ class _ActivityCardState extends State<ActivityCard> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Idea",
+                widget.activity.name,
                 style: LTextThemes.mediumTitleBlack,
               ),
               Text(

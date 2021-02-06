@@ -11,7 +11,7 @@ import 'package:todo_list/core/util/inputDecorations.dart';
 import 'package:todo_list/core/util/textThemes.dart';
 import 'package:todo_list/ui/widgets/activityCard.dart';
 
-class CreateToDoView extends StatelessWidget {
+class CreateToDoView extends StatefulWidget {
   CreateToDoBloc bloc;
 
   CreateToDoView({this.bloc});
@@ -22,6 +22,17 @@ class CreateToDoView extends StatelessWidget {
         return CreateToDoView(bloc: bloc);
       }),
     );
+  }
+
+  @override
+  _CreateToDoViewState createState() => _CreateToDoViewState();
+}
+
+class _CreateToDoViewState extends State<CreateToDoView> {
+  @override
+  void dispose() {
+    widget.bloc.dispose();
+    super.dispose();
   }
 
   @override
@@ -38,54 +49,74 @@ class CreateToDoView extends StatelessWidget {
                 builder: (_) => BackdropFilter(
                   filter: ImageFilter.blur(sigmaX: 7, sigmaY: 7),
                   child: AlertDialog(
-                    content: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Title",
-                          style: LTextThemes.mediumTitleBlack,
-                        ),
-                        SizedBox(height: 10),
-                        TextFormField(
-                          decoration: InputDecorations.primary("title..."),
-                        ),
-                        SizedBox(height: 20),
-                        Text(
-                          "Description or Note",
-                          style: LTextThemes.mediumTitleBlack,
-                        ),
-                        SizedBox(height: 10),
-                        TextFormField(
-                          decoration: InputDecorations.primary("Description"),
-                          maxLines: 5,
-                        ),
-                        SizedBox(height: 10),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
+                    content: Form(
+                      key: widget.bloc.activityKey,
+                      child: SingleChildScrollView(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            FlatButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: Text(
-                                "Cancel",
-                                style: LTextThemes.smallBodyBlack,
-                              ),
+                            Text(
+                              "Name",
+                              style: LTextThemes.mediumTitleBlack,
                             ),
-                            FlatButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
+                            SizedBox(height: 10),
+                            TextFormField(
+                              validator: (val) {
+                                if (val.length > 3) {
+                                  return null;
+                                }
+                                return "More than 3 characters";
                               },
-                              color: LColors.primaryColor,
-                              child: Text(
-                                "Add",
-                                style: LTextThemes.smallBodywhite,
-                              ),
+                              onSaved: (val) {
+                                widget.bloc.activityName(val);
+                                setState(() {});
+                              },
+                              decoration: InputDecorations.primary("name..."),
+                            ),
+                            SizedBox(height: 20),
+                            Text(
+                              "Description or Note",
+                              style: LTextThemes.mediumTitleBlack,
+                            ),
+                            SizedBox(height: 10),
+                            TextFormField(
+                              onSaved: (val) {
+                                widget.bloc.activityDescription(val);
+                              },
+                              decoration:
+                                  InputDecorations.primary("Description"),
+                              maxLines: 5,
+                            ),
+                            SizedBox(height: 10),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                FlatButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text(
+                                    "Cancel",
+                                    style: LTextThemes.smallBodyBlack,
+                                  ),
+                                ),
+                                FlatButton(
+                                  onPressed: () {
+                                    widget.bloc.createActivity(context);
+                                    // Navigator.of(context).pop();
+                                  },
+                                  color: LColors.primaryColor,
+                                  child: Text(
+                                    "Add",
+                                    style: LTextThemes.smallBodywhite,
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
-                      ],
+                      ),
                     ),
                   ),
                 ),
@@ -178,25 +209,24 @@ class CreateToDoView extends StatelessWidget {
                     return GestureDetector(
                       onTap: () {
                         showDialog(
-                            context: context,
-                            barrierColor: LColors.black.withOpacity(0.15),
-                            builder: (context) => BackdropFilter(
-                                  filter:
-                                      ImageFilter.blur(sigmaX: 7, sigmaY: 7),
-                                  child: AlertDialog(
-                                    content: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        SfDateRangePicker(
-                                          todayHighlightColor:
-                                              LColors.primaryColor,
-                                          selectionColor: LColors.primaryColor,
-                                          minDate: DateTime.now(),
-                                        ),
-                                      ],
-                                    ),
+                          context: context,
+                          barrierColor: LColors.black.withOpacity(0.15),
+                          builder: (context) => BackdropFilter(
+                            filter: ImageFilter.blur(sigmaX: 7, sigmaY: 7),
+                            child: AlertDialog(
+                              content: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  SfDateRangePicker(
+                                    todayHighlightColor: LColors.primaryColor,
+                                    selectionColor: LColors.primaryColor,
+                                    minDate: DateTime.now(),
                                   ),
-                                ));
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
                       },
                       child: Container(
                         margin: EdgeInsets.only(right: 20, top: 10, bottom: 10),
@@ -263,7 +293,7 @@ class CreateToDoView extends StatelessWidget {
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 15.0),
                 child: StreamBuilder<List<Activity>>(
-                  stream: bloc.activityList,
+                  stream: widget.bloc.activityList,
                   initialData: [],
                   builder: (context, snapshot) {
                     if (snapshot.data.length == 0 || snapshot.data == null) {

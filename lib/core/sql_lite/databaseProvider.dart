@@ -51,14 +51,15 @@ class DBProvider {
 
   getAllActivites() async {
     final db = await database;
-    // await db.execute("CREATE TABLE Activity ("
-    //     "id TEXT PRIMARY KEY,"
-    //     "name TEXT,"
-    //     "description TEXT"
-    //     ");");
     var res = await db.query("Activity");
     List<Activity> list =
         res.isNotEmpty ? res.map((c) => Activity.fromJson(c)).toList() : [];
     return list;
+  }
+
+  postNewActivity(Activity activity) async {
+    final db = await database;
+    var res = await db.insert("Activity", activity.toJson());
+    return res;
   }
 }
