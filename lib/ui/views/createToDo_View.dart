@@ -1,15 +1,29 @@
+import 'dart:ffi';
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+import 'package:todo_list/core/BLoCs/createToDo_Bloc.dart';
+import 'package:todo_list/core/models/activity.dart';
 import 'package:todo_list/core/util/appColors.dart';
+import 'package:todo_list/core/util/inputDecorations.dart';
 import 'package:todo_list/core/util/textThemes.dart';
 import 'package:todo_list/ui/widgets/activityCard.dart';
 
-class CreateToDoView extends StatefulWidget {
-  @override
-  _CreateToDoViewState createState() => _CreateToDoViewState();
-}
+class CreateToDoView extends StatelessWidget {
+  CreateToDoBloc bloc;
 
-class _CreateToDoViewState extends State<CreateToDoView> {
+  CreateToDoView({this.bloc});
+  static Widget create(BuildContext context) {
+    return Provider<CreateToDoBloc>(
+      create: (context) => CreateToDoBloc(),
+      child: Consumer<CreateToDoBloc>(builder: (context, bloc, _) {
+        return CreateToDoView(bloc: bloc);
+      }),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,7 +32,65 @@ class _CreateToDoViewState extends State<CreateToDoView> {
         children: [
           FloatingActionButton(
             heroTag: "",
-            onPressed: () {},
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (_) => BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 7, sigmaY: 7),
+                  child: AlertDialog(
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Title",
+                          style: LTextThemes.mediumTitleBlack,
+                        ),
+                        SizedBox(height: 10),
+                        TextFormField(
+                          decoration: InputDecorations.primary("title..."),
+                        ),
+                        SizedBox(height: 20),
+                        Text(
+                          "Description or Note",
+                          style: LTextThemes.mediumTitleBlack,
+                        ),
+                        SizedBox(height: 10),
+                        TextFormField(
+                          decoration: InputDecorations.primary("Description"),
+                          maxLines: 5,
+                        ),
+                        SizedBox(height: 10),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            FlatButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text(
+                                "Cancel",
+                                style: LTextThemes.smallBodyBlack,
+                              ),
+                            ),
+                            FlatButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              color: LColors.primaryColor,
+                              child: Text(
+                                "Add",
+                                style: LTextThemes.smallBodywhite,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
             ),
@@ -107,8 +179,23 @@ class _CreateToDoViewState extends State<CreateToDoView> {
                       onTap: () {
                         showDialog(
                             context: context,
-                            builder: (context) => SfDateRangePicker(
-                                  todayHighlightColor: LColors.primaryColor,
+                            barrierColor: LColors.black.withOpacity(0.15),
+                            builder: (context) => BackdropFilter(
+                                  filter:
+                                      ImageFilter.blur(sigmaX: 7, sigmaY: 7),
+                                  child: AlertDialog(
+                                    content: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        SfDateRangePicker(
+                                          todayHighlightColor:
+                                              LColors.primaryColor,
+                                          selectionColor: LColors.primaryColor,
+                                          minDate: DateTime.now(),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                 ));
                       },
                       child: Container(
@@ -175,10 +262,21 @@ class _CreateToDoViewState extends State<CreateToDoView> {
             Expanded(
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 15.0),
-                child: ListView.builder(
-                  itemCount: 5 + 1,
-                  itemBuilder: (context, index) {
-                    return ActivityCard();
+                child: StreamBuilder<List<Activity>>(
+                  stream: bloc.activityList,
+                  initialData: [],
+                  builder: (context, snapshot) {
+                    if (snapshot.data.length == 0 || snapshot.data == null) {
+                      return Center(child: Text("No Activity found"));
+                    }
+                    return ListView.builder(
+                      itemCount: snapshot.data.length,
+                      itemBuilder: (context, index) {
+                        return ActivityCard(
+                          activity: snapshot.data[index],
+                        );
+                      },
+                    );
                   },
                 ),
               ),

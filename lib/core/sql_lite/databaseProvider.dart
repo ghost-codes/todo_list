@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:todo_list/core/models/activity.dart';
 import 'package:todo_list/core/models/todo.dart';
 
 class DBProvider {
@@ -24,14 +25,19 @@ class DBProvider {
     return await openDatabase(path, version: 1, onOpen: (db) {},
         onCreate: (Database db, int version) async {
       await db.execute("CREATE TABLE Todo ("
-          "id INTEGER PRIMARY KEY,"
+          "id TEXT PRIMARY KEY,"
           "title TEXT,"
           "description TEXT,"
           "datetime TEXT,"
           "duration TEXT,"
           "activity TEXT"
           "isDone BOOLEAN"
-          ")");
+          ");"
+          "CREATE TABLE Activity ("
+          "id TEXT PRIMARY KEY,"
+          "name TEXT,"
+          "description TEXT"
+          ");");
     });
   }
 
@@ -40,6 +46,19 @@ class DBProvider {
     var res = await db.query("Todo");
     List<ToDo> list =
         res.isNotEmpty ? res.map((c) => ToDo.fromJson(c)).toList() : [];
+    return list;
+  }
+
+  getAllActivites() async {
+    final db = await database;
+    // await db.execute("CREATE TABLE Activity ("
+    //     "id TEXT PRIMARY KEY,"
+    //     "name TEXT,"
+    //     "description TEXT"
+    //     ");");
+    var res = await db.query("Activity");
+    List<Activity> list =
+        res.isNotEmpty ? res.map((c) => Activity.fromJson(c)).toList() : [];
     return list;
   }
 }

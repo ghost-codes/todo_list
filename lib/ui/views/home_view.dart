@@ -137,7 +137,8 @@ class _HomeViewState extends State<HomeView> {
                   StreamBuilder<List<ToDo>>(
                       stream: bloc.todoList,
                       builder: (context, snapshot) {
-                        return Text("${(snapshot.data)?.length == null} tasks",
+                        return Text(
+                            "${(snapshot.data == null) ? 0 : snapshot.data.length} tasks",
                             style: LTextThemes.tinyFadedAnotePrim);
                       }),
                 ],

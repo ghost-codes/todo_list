@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:todo_list/core/models/activity.dart';
 import 'package:todo_list/core/util/appColors.dart';
 import 'package:todo_list/core/util/textThemes.dart';
 
 class ActivityCard extends StatefulWidget {
+  final Activity activity;
+
+  const ActivityCard({Key key, this.activity}) : super(key: key);
   @override
   _ActivityCardState createState() => _ActivityCardState();
 }

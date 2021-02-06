@@ -4,7 +4,9 @@ import 'package:todo_list/core/models/todo.dart';
 import 'package:todo_list/core/sql_lite/databaseProvider.dart';
 
 class HomeBloc {
-  HomeBloc() {}
+  HomeBloc() {
+    getTodos();
+  }
 
   final StreamController<List<ToDo>> _todoListController =
       StreamController<List<ToDo>>.broadcast();
