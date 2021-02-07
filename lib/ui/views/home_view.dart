@@ -1,8 +1,11 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:todo_list/core/BLoCs/homeBloc.dart';
 import 'package:todo_list/core/models/todo.dart';
 import 'package:todo_list/core/util/appColors.dart';
@@ -95,52 +98,85 @@ class _HomeViewState extends State<HomeView> {
   }
 
   Widget topWithDate() {
-    DateTime now = DateTime.now();
+    String date = '';
+    if (DateFormat("yyyy-MM").format(bloc.date) ==
+        DateFormat("yyyy-MM").format(DateTime.now())) {
+      date = "Today";
+    } else {
+      date = DateFormat("yyyy-MM").format(bloc.date);
+    }
     return Padding(
       padding: EdgeInsets.all(15),
       child: Column(
         children: [
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //   children: [
-          //     IconButton(
-          //       onPressed: () {},
-          //       icon: Icon(
-          //         Icons.grid_view,
-          //         color: LColors.white,
-          //         size: 18,
-          //       ),
-          //     ),
-          //     Text(
-          //       // "\${now.day} \${DateFormat(\"MMMM\").parse(now.month)}",
-          //       "${now.day}",
-          //       style: LTextThemes.smallBodywhite,
-          //     ),
-          //     IconButton(
-          //       onPressed: () {},
-          //       icon: Icon(
-          //         Icons.alarm,
-          //         color: LColors.white,
-          //         size: 18,
-          //       ),
-          //     ),
-          //   ],
-          // ),
-          // SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("Today", style: LTextThemes.bigTitleWhite),
+                  GestureDetector(
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        barrierColor: LColors.black.withOpacity(0.15),
+                        builder: (context) => BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 7, sigmaY: 7),
+                          child: AlertDialog(
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                SfDateRangePicker(
+                                  selectionMode:
+                                      DateRangePickerSelectionMode.single,
+                                  onSelectionChanged:
+                                      (DateRangePickerSelectionChangedArgs
+                                          date) {
+                                    widget.bloc.date = date.value;
+                                    print(date.value);
+                                  },
+                                  todayHighlightColor: LColors.primaryColor,
+                                  selectionColor: LColors.primaryColor,
+                                  minDate: DateTime.now(),
+                                ),
+                              ],
+                            ),
+                            actions: [
+                              FlatButton(
+                                color: LColors.primaryColor,
+                                child: Text(
+                                  "Done",
+                                  style: LTextThemes.smallBodywhite,
+                                ),
+                                onPressed: () {
+                                  bloc.getTodos();
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                    child: Row(
+                      children: [
+                        Text(date, style: LTextThemes.bigTitleWhite),
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          size: 15,
+                          color: LColors.white,
+                        ),
+                      ],
+                    ),
+                  ),
                   StreamBuilder<List<ToDo>>(
-                      stream: bloc.todoList,
-                      builder: (context, snapshot) {
-                        return Text(
-                            "${(snapshot.data == null) ? 0 : snapshot.data.length} tasks",
-                            style: LTextThemes.tinyFadedAnotePrim);
-                      }),
+                    stream: bloc.todoList,
+                    builder: (context, snapshot) {
+                      return Text(
+                          "${(snapshot.data == null) ? 0 : snapshot.data.length} tasks",
+                          style: LTextThemes.tinyFadedAnotePrim);
+                    },
+                  ),
                 ],
               ),
               FlatButton(

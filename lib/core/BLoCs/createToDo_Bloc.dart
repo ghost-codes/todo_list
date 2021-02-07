@@ -20,14 +20,21 @@ class CreateToDoBloc {
   Activity tempActivity = Activity();
   ToDo _tempTodo = ToDo();
 
+  DateTime tempDate = DateTime.now();
   String duration = '';
   String hour = '';
   String min = '';
   final activityKey = GlobalKey<FormState>();
   final todoKey = GlobalKey<FormState>();
+  String temprActivity = '';
 
   final StreamController<List<Activity>> _activityList =
       StreamController<List<Activity>>.broadcast();
+
+  final StreamController<String> _tempActivity =
+      StreamController<String>.broadcast();
+
+  Stream<String> get selectedActivity => _tempActivity.stream;
 
   Stream<List<Activity>> get activityList => _activityList.stream;
 
@@ -92,22 +99,24 @@ class CreateToDoBloc {
     if (form.validate()) {
       form.save();
       _tempTodo.id = uuid.v1();
-      _tempTodo.activity = await _tempActivity.stream.last;
+      print(temprActivity);
+      _tempTodo.activity = temprActivity;
       _tempTodo.isDone = 0;
-      _tempTodo.duration = "${hour}h:${min}n";
+      _tempTodo.duration = "${hour}h:${min}m";
+      _tempTodo.date = DateFormat("yyyy-MM-dd").format(tempDate);
       await DBProvider.db.postNewTodo(_tempTodo);
       Navigator.of(context).popUntil((route) {
         return route.settings.name == '/';
       });
+      print("Add");
     }
   }
 
-  final StreamController<String> _tempActivity =
-      StreamController<String>.broadcast();
-
-  Stream<String> get selectedActivity => _tempActivity.stream;
-
   setActivity(String val) {
     _tempActivity.sink.add(val);
+  }
+
+  setDate(DateTime date) {
+    tempDate = date;
   }
 }

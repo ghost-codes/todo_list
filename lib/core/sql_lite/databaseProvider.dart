@@ -31,14 +31,15 @@ class DBProvider {
           "datetime TEXT,"
           "duration TEXT,"
           "activity TEXT,"
+          "date TEXT,"
           "isDone INTEGER"
           ");");
     });
   }
 
-  getAllToDos() async {
+  getAllToDos(String date) async {
     final db = await database;
-    var res = await db.query("Todo");
+    var res = await db.query("Todo", where: "date=?", whereArgs: [date]);
     List<ToDo> list =
         res.isNotEmpty ? res.map((c) => ToDo.fromJson(c)).toList() : [];
     return list;

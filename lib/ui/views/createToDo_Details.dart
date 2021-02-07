@@ -7,17 +7,11 @@ import 'package:todo_list/core/util/inputDecorations.dart';
 import 'package:todo_list/core/util/textThemes.dart';
 
 class CreateToDoDetails extends StatefulWidget {
-  CreateToDoBloc bloc;
+  final CreateToDoBloc bloc;
 
-  CreateToDoDetails({this.bloc});
-  static Widget create(BuildContext context) {
-    return Provider<CreateToDoBloc>(
-      create: (context) => CreateToDoBloc(),
-      child: Consumer<CreateToDoBloc>(builder: (context, bloc, _) {
-        return CreateToDoDetails(bloc: bloc);
-      }),
-    );
-  }
+  const CreateToDoDetails({Key key, this.bloc}) : super(key: key);
+
+  // CreateToDoDetails({this.bloc});
 
   @override
   _CreateToDoDetailsState createState() => _CreateToDoDetailsState();
@@ -34,6 +28,7 @@ class _CreateToDoDetailsState extends State<CreateToDoDetails> {
         actions: [
           FlatButton(
             onPressed: () {
+              print("Add");
               widget.bloc.createTodo(context);
             },
             color: LColors.primaryColor,

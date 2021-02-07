@@ -19,11 +19,18 @@ class MyApp extends StatelessWidget {
         primaryColor: LColors.primaryColor,
       ),
       initialRoute: '/splash',
+      onGenerateRoute: (settings) {
+        if (settings.name == '/create_task_details') {
+          return MaterialPageRoute(builder: (context) {
+            return CreateToDoDetails(bloc: settings.arguments);
+          });
+        }
+      },
       routes: {
         '/splash': (context) => SplashScreen(),
         '/': (context) => HomeView.create(context),
         '/create_task': (context) => CreateToDoView.create(context),
-        '/create_task_details': (context) => CreateToDoDetails.create(context),
+        // '/create_task_details': (context) => CreateToDoDetails.create(context,),
       },
     );
   }

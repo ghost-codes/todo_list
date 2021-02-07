@@ -133,7 +133,8 @@ class _CreateToDoViewState extends State<CreateToDoView> {
           ),
           FloatingActionButton(
             onPressed: () {
-              Navigator.pushNamed(context, '/create_task_details');
+              Navigator.pushNamed(context, '/create_task_details',
+                  arguments: widget.bloc);
             },
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
@@ -218,6 +219,14 @@ class _CreateToDoViewState extends State<CreateToDoView> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   SfDateRangePicker(
+                                    selectionMode:
+                                        DateRangePickerSelectionMode.single,
+                                    onSelectionChanged:
+                                        (DateRangePickerSelectionChangedArgs
+                                            date) {
+                                      widget.bloc.tempDate = date.value;
+                                      print(date.value);
+                                    },
                                     todayHighlightColor: LColors.primaryColor,
                                     selectionColor: LColors.primaryColor,
                                     minDate: DateTime.now(),
@@ -249,27 +258,33 @@ class _CreateToDoViewState extends State<CreateToDoView> {
                       ),
                     );
                   }
-                  return Container(
-                    margin: EdgeInsets.only(right: 20, top: 10, bottom: 10),
-                    child: AspectRatio(
-                      aspectRatio: 1,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: LColors.offWhite,
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "${DateTime.now().add(Duration(days: index)).day}",
-                              style: LTextThemes.bigTitleBlack,
-                            ),
-                            Text(
-                              "${DateFormat("EEE").format(DateTime.now().add(Duration(days: index)))}",
-                              style: LTextThemes.tinyFadedAnoteGrey,
-                            ),
-                          ],
+                  return GestureDetector(
+                    onTap: () {
+                      widget.bloc.tempDate =
+                          DateTime.now().add(Duration(days: index));
+                    },
+                    child: Container(
+                      margin: EdgeInsets.only(right: 20, top: 10, bottom: 10),
+                      child: AspectRatio(
+                        aspectRatio: 1,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: LColors.offWhite,
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "${DateTime.now().add(Duration(days: index)).day}",
+                                style: LTextThemes.bigTitleBlack,
+                              ),
+                              Text(
+                                "${DateFormat("EEE").format(DateTime.now().add(Duration(days: index)))}",
+                                style: LTextThemes.tinyFadedAnoteGrey,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -302,11 +317,13 @@ class _CreateToDoViewState extends State<CreateToDoView> {
                     return ListView.builder(
                       itemCount: snapshot.data.length,
                       itemBuilder: (context, index) {
-                        String groupRadio = "Activity";
                         return StreamBuilder<String>(
                             stream: widget.bloc.selectedActivity,
                             initialData: '',
                             builder: (context, act) {
+                              widget.bloc.temprActivity = act.data;
+                              print(act.data);
+                              print(widget.bloc.temprActivity);
                               return ActivityCard(
                                 activity: snapshot.data[index],
                                 groupRadio: act.data,
