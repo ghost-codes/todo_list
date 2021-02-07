@@ -16,6 +16,12 @@ class ToDoItemCard extends StatefulWidget {
 class _ToDoItemCardState extends State<ToDoItemCard> {
   @override
   Widget build(BuildContext context) {
+    String activity;
+    if (widget.toDo.activity.length == 0) {
+      activity = "None";
+    } else {
+      activity = widget.toDo.activity;
+    }
     return Consumer<HomeBloc>(builder: (context, bloc, _) {
       return Dismissible(
         background: backgroundDelete(),
@@ -138,17 +144,22 @@ class _ToDoItemCardState extends State<ToDoItemCard> {
                         children: [
                           Text(
                             "${widget.toDo.title}",
-                            style: LTextThemes.smallBodyBlack,
+                            style: widget.toDo.isDone == 1
+                                ? LTextThemes.smallBodyPrim
+                                : LTextThemes.smallBodyBlack,
                             overflow: TextOverflow.ellipsis,
                           ),
                           SizedBox(height: 5),
                           Text(
-                            "${widget.toDo.activity}",
+                            "${activity}",
                             style: LTextThemes.tinyFadedAnotePrim,
                           ),
                         ],
                       ),
                     ),
+                    Spacer(),
+                    Text(widget.toDo.datetime,
+                        style: LTextThemes.smallBodyPrim),
                   ],
                 ),
               ),

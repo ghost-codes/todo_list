@@ -92,7 +92,7 @@ class CreateToDoBloc {
     if (form.validate()) {
       form.save();
       _tempTodo.id = uuid.v1();
-      _tempTodo.activity = '';
+      _tempTodo.activity = await _tempActivity.stream.last;
       _tempTodo.isDone = 0;
       _tempTodo.duration = "${hour}h:${min}n";
       await DBProvider.db.postNewTodo(_tempTodo);
@@ -100,5 +100,14 @@ class CreateToDoBloc {
         return route.settings.name == '/';
       });
     }
+  }
+
+  final StreamController<String> _tempActivity =
+      StreamController<String>.broadcast();
+
+  Stream<String> get selectedActivity => _tempActivity.stream;
+
+  setActivity(String val) {
+    _tempActivity.sink.add(val);
   }
 }

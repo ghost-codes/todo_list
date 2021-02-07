@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:todo_list/core/BLoCs/createToDo_Bloc.dart';
@@ -191,11 +192,11 @@ class _CreateToDoViewState extends State<CreateToDoView> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                "5",
+                                "${DateTime.now().day}",
                                 style: LTextThemes.bigTitleWhite,
                               ),
                               Text(
-                                "Mon",
+                                "${DateFormat("EEE").format(DateTime.now())}",
                                 style: LTextThemes.tinyFadedAnotePrim,
                               ),
                             ],
@@ -261,11 +262,11 @@ class _CreateToDoViewState extends State<CreateToDoView> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              "${5 + index}",
+                              "${DateTime.now().add(Duration(days: index)).day}",
                               style: LTextThemes.bigTitleBlack,
                             ),
                             Text(
-                              "Tue",
+                              "${DateFormat("EEE").format(DateTime.now().add(Duration(days: index)))}",
                               style: LTextThemes.tinyFadedAnoteGrey,
                             ),
                           ],
@@ -301,9 +302,16 @@ class _CreateToDoViewState extends State<CreateToDoView> {
                     return ListView.builder(
                       itemCount: snapshot.data.length,
                       itemBuilder: (context, index) {
-                        return ActivityCard(
-                          activity: snapshot.data[index],
-                        );
+                        String groupRadio = "Activity";
+                        return StreamBuilder<String>(
+                            stream: widget.bloc.selectedActivity,
+                            initialData: '',
+                            builder: (context, act) {
+                              return ActivityCard(
+                                activity: snapshot.data[index],
+                                groupRadio: act.data,
+                              );
+                            });
                       },
                     );
                   },
