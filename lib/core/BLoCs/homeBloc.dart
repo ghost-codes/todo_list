@@ -15,7 +15,6 @@ class HomeBloc {
   Stream<List<ToDo>> get todoList => _todoListController.stream;
 
   getTodos() async {
-    print("hello");
     _todoListController.sink.add(await DBProvider.db.getAllToDos());
   }
 
@@ -27,5 +26,16 @@ class HomeBloc {
 
   dispose() {
     _todoListController.close();
+  }
+
+  deleteWithId(String id, context) async {
+    await DBProvider.db.deleteToDo(id);
+    Navigator.of(context).pop();
+    getTodos();
+  }
+
+  taskIsDone(ToDo todo) async {
+    await DBProvider.db.updateToDo(todo);
+    getTodos();
   }
 }

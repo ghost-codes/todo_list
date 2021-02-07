@@ -8,4 +8,5 @@ class LColors {
   static const Color white = Colors.white;
   static const Color black = Color(0xff2A2B29);
   static const Color grey = Colors.grey;
+  static const Color red = Colors.red;
 }

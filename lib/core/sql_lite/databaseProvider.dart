@@ -68,4 +68,16 @@ class DBProvider {
     var res = await db.insert("Todo", todo.toJson());
     return res;
   }
+
+  deleteToDo(String id) async {
+    final db = await database;
+    db.delete("Todo", where: "id = ?", whereArgs: [id]);
+  }
+
+  updateToDo(ToDo todo) async {
+    final db = await database;
+    var res = await db
+        .update("ToDO", todo.toJson(), where: "id = ?", whereArgs: [todo.id]);
+    return res;
+  }
 }

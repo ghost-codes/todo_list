@@ -100,33 +100,33 @@ class _HomeViewState extends State<HomeView> {
       padding: EdgeInsets.all(15),
       child: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              IconButton(
-                onPressed: () {},
-                icon: Icon(
-                  Icons.grid_view,
-                  color: LColors.white,
-                  size: 18,
-                ),
-              ),
-              Text(
-                // "\${now.day} \${DateFormat(\"MMMM\").parse(now.month)}",
-                "${now.day}",
-                style: LTextThemes.smallBodywhite,
-              ),
-              IconButton(
-                onPressed: () {},
-                icon: Icon(
-                  Icons.alarm,
-                  color: LColors.white,
-                  size: 18,
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 20),
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //   children: [
+          //     IconButton(
+          //       onPressed: () {},
+          //       icon: Icon(
+          //         Icons.grid_view,
+          //         color: LColors.white,
+          //         size: 18,
+          //       ),
+          //     ),
+          //     Text(
+          //       // "\${now.day} \${DateFormat(\"MMMM\").parse(now.month)}",
+          //       "${now.day}",
+          //       style: LTextThemes.smallBodywhite,
+          //     ),
+          //     IconButton(
+          //       onPressed: () {},
+          //       icon: Icon(
+          //         Icons.alarm,
+          //         color: LColors.white,
+          //         size: 18,
+          //       ),
+          //     ),
+          //   ],
+          // ),
+          // SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
