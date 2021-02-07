@@ -144,8 +144,8 @@ class _HomeViewState extends State<HomeView> {
                 ],
               ),
               FlatButton(
-                onPressed: () {
-                  Navigator.of(context).pushNamed('/create_task');
+                onPressed: () async {
+                  await bloc.push(context);
                 },
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),

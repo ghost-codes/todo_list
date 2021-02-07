@@ -38,7 +38,7 @@ class _ToDoItemCardState extends State<ToDoItemCard> {
                 GestureDetector(
                   onTap: () {
                     setState(() {
-                      widget.toDo.isDone = !widget.toDo.isDone;
+                      widget.toDo.isDone = widget.toDo.isDone == 1 ? 0 : 1;
                     });
                     // print("Hey");
                   },
@@ -46,7 +46,7 @@ class _ToDoItemCardState extends State<ToDoItemCard> {
                     width: 25,
                     child: AspectRatio(
                       aspectRatio: 1,
-                      child: widget.toDo.isDone
+                      child: widget.toDo.isDone == 0
                           ? Container(
                               margin: EdgeInsets.all(2),
                               padding: EdgeInsets.all(.5),
@@ -66,7 +66,7 @@ class _ToDoItemCardState extends State<ToDoItemCard> {
                                 Container(
                                   margin: EdgeInsets.all(2),
                                   decoration: BoxDecoration(
-                                    border: widget.toDo.isDone
+                                    border: widget.toDo.isDone == 1
                                         ? Border.all()
                                         : Border.all(
                                             style: BorderStyle.solid,
@@ -74,7 +74,7 @@ class _ToDoItemCardState extends State<ToDoItemCard> {
                                             width: 1,
                                           ),
                                     borderRadius: BorderRadius.circular(5),
-                                    color: widget.toDo.isDone
+                                    color: widget.toDo.isDone == 1
                                         ? LColors.primaryColor
                                         : Colors.transparent,
                                   ),

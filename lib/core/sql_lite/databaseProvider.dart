@@ -30,13 +30,8 @@ class DBProvider {
           "description TEXT,"
           "datetime TEXT,"
           "duration TEXT,"
-          "activity TEXT"
-          "isDone BOOLEAN"
-          ");"
-          "CREATE TABLE Activity ("
-          "id TEXT PRIMARY KEY,"
-          "name TEXT,"
-          "description TEXT"
+          "activity TEXT,"
+          "isDone INTEGER"
           ");");
     });
   }
@@ -51,6 +46,11 @@ class DBProvider {
 
   getAllActivites() async {
     final db = await database;
+    await db.execute("CREATE TABLE IF NOT EXISTS Activity ("
+        "id TEXT PRIMARY KEY,"
+        "name TEXT,"
+        "description TEXT"
+        ");");
     var res = await db.query("Activity");
     List<Activity> list =
         res.isNotEmpty ? res.map((c) => Activity.fromJson(c)).toList() : [];
@@ -60,6 +60,12 @@ class DBProvider {
   postNewActivity(Activity activity) async {
     final db = await database;
     var res = await db.insert("Activity", activity.toJson());
+    return res;
+  }
+
+  postNewTodo(ToDo todo) async {
+    final db = await database;
+    var res = await db.insert("Todo", todo.toJson());
     return res;
   }
 }

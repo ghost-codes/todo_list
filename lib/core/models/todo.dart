@@ -19,13 +19,13 @@ class ToDo {
     this.isDone,
   });
 
-  int id;
+  String id;
   String title;
   String description;
   String datetime;
   String duration;
   String activity;
-  bool isDone;
+  int isDone = 0;
 
   factory ToDo.fromJson(Map<String, dynamic> json) => ToDo(
         id: json["id"],
@@ -37,13 +37,15 @@ class ToDo {
         isDone: json["isDone"],
       );
 
-  Map<String, dynamic> toJson() => {
-        "id": id,
-        "title": title,
-        "description": description,
-        "datetime": datetime,
-        "duration": duration,
-        "activity": activity,
-        "isDone": isDone,
-      };
+  Map<String, dynamic> toJson() {
+    return {
+      "id": id,
+      "title": title,
+      "description": description,
+      "datetime": datetime,
+      "duration": duration,
+      "activity": activity,
+      "isDone": isDone,
+    };
+  }
 }
