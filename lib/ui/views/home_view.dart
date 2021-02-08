@@ -81,7 +81,15 @@ class _HomeViewState extends State<HomeView> {
                             scrollDirection: Axis.vertical,
                             itemCount: snapshot.data.length,
                             itemBuilder: (context, index) {
-                              return ToDoItemCard(toDo: snapshot.data[index]);
+                              return Column(
+                                children: [
+                                  ToDoItemCard(toDo: snapshot.data[index]),
+                                  Divider(
+                                    color: LColors.grey,
+                                    thickness: 1.3,
+                                  ),
+                                ],
+                              );
                             },
                           );
                         },
@@ -99,12 +107,7 @@ class _HomeViewState extends State<HomeView> {
 
   Widget topWithDate() {
     String date = '';
-    if (DateFormat("yyyy-MM").format(bloc.date) ==
-        DateFormat("yyyy-MM").format(DateTime.now())) {
-      date = "Today";
-    } else {
-      date = DateFormat("yyyy-MM").format(bloc.date);
-    }
+
     return Padding(
       padding: EdgeInsets.all(15),
       child: Column(
@@ -132,7 +135,7 @@ class _HomeViewState extends State<HomeView> {
                                   onSelectionChanged:
                                       (DateRangePickerSelectionChangedArgs
                                           date) {
-                                    widget.bloc.date = date.value;
+                                    widget.bloc.setDate(date.value);
                                     print(date.value);
                                   },
                                   todayHighlightColor: LColors.primaryColor,
@@ -158,16 +161,27 @@ class _HomeViewState extends State<HomeView> {
                         ),
                       );
                     },
-                    child: Row(
-                      children: [
-                        Text(date, style: LTextThemes.bigTitleWhite),
-                        Icon(
-                          Icons.arrow_forward_ios,
-                          size: 15,
-                          color: LColors.white,
-                        ),
-                      ],
-                    ),
+                    child: StreamBuilder<DateTime>(
+                        stream: widget.bloc.dateT,
+                        initialData: DateTime.now(),
+                        builder: (context, snapshot) {
+                          if (DateFormat("yyyy-MM-dd").format(snapshot.data) ==
+                              DateFormat("yyyy-MM-dd").format(DateTime.now())) {
+                            date = "Today";
+                          } else {
+                            date = DateFormat("MM-dd").format(bloc.date);
+                          }
+                          return Row(
+                            children: [
+                              Text(date, style: LTextThemes.bigTitleWhite),
+                              Icon(
+                                Icons.arrow_forward_ios,
+                                size: 15,
+                                color: LColors.white,
+                              ),
+                            ],
+                          );
+                        }),
                   ),
                   StreamBuilder<List<ToDo>>(
                     stream: bloc.todoList,
@@ -181,7 +195,7 @@ class _HomeViewState extends State<HomeView> {
               ),
               FlatButton(
                 onPressed: () async {
-                  await bloc.push(context);
+                  await bloc.push(context, '/create_task');
                 },
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),

@@ -1,26 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
 import 'package:provider/provider.dart';
-import 'package:todo_list/core/BLoCs/createToDo_Bloc.dart';
+import 'package:todo_list/core/BLoCs/edit_todoBloc.dart';
+import 'package:todo_list/core/models/todo.dart';
 import 'package:todo_list/core/util/appColors.dart';
 import 'package:todo_list/core/util/inputDecorations.dart';
 import 'package:todo_list/core/util/textThemes.dart';
 
-class CreateToDoDetails extends StatefulWidget {
-  final CreateToDoBloc bloc;
+class EditTodoView extends StatefulWidget {
+  EditTodoBloc bloc;
 
-  const CreateToDoDetails({Key key, this.bloc}) : super(key: key);
-
-  // CreateToDoDetails({this.bloc});
+  EditTodoView({this.bloc});
+  static Widget create(context, ToDo tempTodo) {
+    return Provider<EditTodoBloc>(
+      create: (context) => EditTodoBloc(tempTodo),
+      child: Consumer<EditTodoBloc>(builder: (context, bloc, _) {
+        return EditTodoView(bloc: bloc);
+      }),
+    );
+  }
 
   @override
-  _CreateToDoDetailsState createState() => _CreateToDoDetailsState();
+  _EditTodoViewState createState() => _EditTodoViewState();
 }
 
-class _CreateToDoDetailsState extends State<CreateToDoDetails> {
-  TimeOfDay value = TimeOfDay(hour: 00, minute: 30);
+class _EditTodoViewState extends State<EditTodoView> {
   @override
   Widget build(BuildContext context) {
+    TimeOfDay t = TimeOfDay(
+        hour: int.parse(widget.bloc.tempTodo.datetime.split(":")[0]),
+        minute: int.parse(widget.bloc.tempTodo.datetime.split(":")[1]));
+    print(widget.bloc.tempTodo.duration);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: LColors.white,
@@ -28,12 +38,11 @@ class _CreateToDoDetailsState extends State<CreateToDoDetails> {
         actions: [
           FlatButton(
             onPressed: () {
-              print("Add");
-              widget.bloc.createTodo(context);
+              widget.bloc.editTodo(context);
             },
             color: LColors.primaryColor,
             child: Text(
-              "Add",
+              "Done",
               style: LTextThemes.smallBodywhite,
             ),
           ),
@@ -75,6 +84,7 @@ class _CreateToDoDetailsState extends State<CreateToDoDetails> {
                 onSaved: (val) {
                   widget.bloc.setTodoTitle(val);
                 },
+                initialValue: widget.bloc.tempTodo.title,
                 decoration: InputDecorations.primary("title..."),
               ),
               SizedBox(height: 20),
@@ -83,11 +93,11 @@ class _CreateToDoDetailsState extends State<CreateToDoDetails> {
                 style: LTextThemes.mediumTitleBlack,
               ),
               TimePickerSpinner(
-                time: DateTime.now(),
+                time: DateTime(DateTime.now().year, 1, 1, t.hour, t.minute),
                 onTimeChange: (time) {
                   widget.bloc.setTime(time);
                 },
-                is24HourMode: true,
+                is24HourMode: false,
                 itemHeight: 30,
                 normalTextStyle: TextStyle(
                   fontSize: 15,
@@ -117,6 +127,8 @@ class _CreateToDoDetailsState extends State<CreateToDoDetails> {
                         widget.bloc.setTodohour(val);
                       },
                       keyboardType: TextInputType.number,
+                      initialValue:
+                          (widget.bloc.tempTodo.duration.split(":")[0]),
                       decoration: InputDecorations.primary("hour"),
                     ),
                   ),
@@ -127,6 +139,8 @@ class _CreateToDoDetailsState extends State<CreateToDoDetails> {
                         widget.bloc.setTodoMin(val);
                       },
                       keyboardType: TextInputType.number,
+                      initialValue:
+                          (widget.bloc.tempTodo.duration.split(":")[1]),
                       decoration: InputDecorations.primary("mins"),
                     ),
                   ),
@@ -142,6 +156,7 @@ class _CreateToDoDetailsState extends State<CreateToDoDetails> {
                 onSaved: (val) {
                   widget.bloc.setTodoDescription(val);
                 },
+                initialValue: widget.bloc.tempTodo.description,
                 decoration: InputDecorations.primary("Description"),
                 maxLines: 5,
               ),

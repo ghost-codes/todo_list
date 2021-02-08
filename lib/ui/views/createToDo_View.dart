@@ -174,36 +174,59 @@ class _CreateToDoViewState extends State<CreateToDoView> {
                 itemCount: 8,
                 itemBuilder: (context, index) {
                   if (index == 0) {
-                    return Container(
-                      margin: EdgeInsets.only(right: 20, top: 10, bottom: 10),
-                      child: AspectRatio(
-                        aspectRatio: 1,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: LColors.primaryColor,
-                            boxShadow: [
-                              BoxShadow(
-                                  blurRadius: 7,
-                                  offset: Offset(2, 4),
-                                  color: LColors.black.withOpacity(0.2))
-                            ],
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "${DateTime.now().day}",
-                                style: LTextThemes.bigTitleWhite,
+                    return GestureDetector(
+                      onTap: () {
+                        widget.bloc.settemDate(
+                            DateTime.now().add(Duration(days: index)));
+                      },
+                      child: StreamBuilder<DateTime>(
+                          stream: widget.bloc.temprDate,
+                          initialData: DateTime.now(),
+                          builder: (context, snapshot) {
+                            return Container(
+                              margin: EdgeInsets.only(
+                                  right: 20, top: 10, bottom: 10),
+                              child: AspectRatio(
+                                aspectRatio: 1,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: LColors.primaryColor,
+                                    border: DateFormat("yyyy-MM-dd")
+                                                .format(snapshot.data) ==
+                                            DateFormat("yyyy-MM-dd").format(
+                                                DateTime.now()
+                                                    .add(Duration(days: index)))
+                                        ? Border.all(
+                                            color: LColors.black,
+                                            width: 5,
+                                            style: BorderStyle.solid)
+                                        : Border.fromBorderSide(
+                                            BorderSide.none),
+                                    boxShadow: [
+                                      BoxShadow(
+                                          blurRadius: 7,
+                                          offset: Offset(2, 4),
+                                          color: LColors.black.withOpacity(0.2))
+                                    ],
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "${DateTime.now().day}",
+                                        style: LTextThemes.bigTitleWhite,
+                                      ),
+                                      Text(
+                                        "${DateFormat("EEE").format(DateTime.now())}",
+                                        style: LTextThemes.tinyFadedAnotePrim,
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ),
-                              Text(
-                                "${DateFormat("EEE").format(DateTime.now())}",
-                                style: LTextThemes.tinyFadedAnotePrim,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
+                            );
+                          }),
                     );
                   }
                   if (index == 7) {
@@ -260,34 +283,50 @@ class _CreateToDoViewState extends State<CreateToDoView> {
                   }
                   return GestureDetector(
                     onTap: () {
-                      widget.bloc.tempDate =
-                          DateTime.now().add(Duration(days: index));
+                      widget.bloc.settemDate(
+                          DateTime.now().add(Duration(days: index)));
                     },
-                    child: Container(
-                      margin: EdgeInsets.only(right: 20, top: 10, bottom: 10),
-                      child: AspectRatio(
-                        aspectRatio: 1,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: LColors.offWhite,
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "${DateTime.now().add(Duration(days: index)).day}",
-                                style: LTextThemes.bigTitleBlack,
+                    child: StreamBuilder<DateTime>(
+                        stream: widget.bloc.temprDate,
+                        initialData: DateTime.now(),
+                        builder: (context, snapshot) {
+                          return Container(
+                            margin:
+                                EdgeInsets.only(right: 20, top: 10, bottom: 10),
+                            child: AspectRatio(
+                              aspectRatio: 1,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: LColors.offWhite,
+                                  border: DateFormat("yyyy-MM-dd")
+                                              .format(snapshot.data) ==
+                                          DateFormat("yyyy-MM-dd").format(
+                                              DateTime.now()
+                                                  .add(Duration(days: index)))
+                                      ? Border.all(
+                                          color: LColors.black,
+                                          width: 5,
+                                          style: BorderStyle.solid)
+                                      : Border.fromBorderSide(BorderSide.none),
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "${DateTime.now().add(Duration(days: index)).day}",
+                                      style: LTextThemes.bigTitleBlack,
+                                    ),
+                                    Text(
+                                      "${DateFormat("EEE").format(DateTime.now().add(Duration(days: index)))}",
+                                      style: LTextThemes.tinyFadedAnoteGrey,
+                                    ),
+                                  ],
+                                ),
                               ),
-                              Text(
-                                "${DateFormat("EEE").format(DateTime.now().add(Duration(days: index)))}",
-                                style: LTextThemes.tinyFadedAnoteGrey,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
+                            ),
+                          );
+                        }),
                   );
                 },
               ),

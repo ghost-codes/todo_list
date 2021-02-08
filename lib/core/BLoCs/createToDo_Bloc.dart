@@ -22,8 +22,8 @@ class CreateToDoBloc {
 
   DateTime tempDate = DateTime.now();
   String duration = '';
-  String hour = '';
-  String min = '';
+  String hour = '00';
+  String min = '00';
   final activityKey = GlobalKey<FormState>();
   final todoKey = GlobalKey<FormState>();
   String temprActivity = '';
@@ -34,9 +34,19 @@ class CreateToDoBloc {
   final StreamController<String> _tempActivity =
       StreamController<String>.broadcast();
 
+  final StreamController<DateTime> _tempDate =
+      StreamController<DateTime>.broadcast();
+
   Stream<String> get selectedActivity => _tempActivity.stream;
+  Stream<DateTime> get temprDate => _tempDate.stream;
 
   Stream<List<Activity>> get activityList => _activityList.stream;
+
+  settemDate(DateTime date) {
+    print(date);
+    tempDate = date;
+    _tempDate.sink.add(date);
+  }
 
   getActivities() async {
     _activityList.sink.add(await DBProvider.db.getAllActivites());
@@ -74,16 +84,16 @@ class CreateToDoBloc {
   }
 
   setTodohour(String val) {
-    if (val != null) {
-      hour = '';
+    if (val == null) {
+      hour = '00';
     } else {
       hour = val;
     }
   }
 
   setTodoMin(String val) {
-    if (val != null) {
-      min = '';
+    if (val == null) {
+      min = '00';
     } else {
       min = val;
     }
@@ -102,7 +112,7 @@ class CreateToDoBloc {
       print(temprActivity);
       _tempTodo.activity = temprActivity;
       _tempTodo.isDone = 0;
-      _tempTodo.duration = "${hour}h:${min}m";
+      _tempTodo.duration = "${hour}:${min}";
       _tempTodo.date = DateFormat("yyyy-MM-dd").format(tempDate);
       await DBProvider.db.postNewTodo(_tempTodo);
       Navigator.of(context).popUntil((route) {
