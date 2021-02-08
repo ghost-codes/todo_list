@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todo_list/core/locator.dart';
 import 'package:todo_list/core/util/appColors.dart';
+import 'package:todo_list/ui/views/edit_todo.dart';
 import 'package:todo_list/ui/views/exportViews.dart';
 
 void main() {
@@ -23,6 +24,11 @@ class MyApp extends StatelessWidget {
         if (settings.name == '/create_task_details') {
           return MaterialPageRoute(builder: (context) {
             return CreateToDoDetails(bloc: settings.arguments);
+          });
+        }
+        if (settings.name == '/edit_task') {
+          return MaterialPageRoute(builder: (context) {
+            return EditTodoView.create(context, settings.arguments);
           });
         }
       },

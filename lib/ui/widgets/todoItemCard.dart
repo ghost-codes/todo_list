@@ -61,6 +61,9 @@ class _ToDoItemCardState extends State<ToDoItemCard> {
           }
         },
         child: GestureDetector(
+          onTap: () {
+            bloc.push(context, '/edit_task', widget.toDo);
+          },
           child: Row(children: [
             Expanded(
               child: Container(
@@ -68,15 +71,7 @@ class _ToDoItemCardState extends State<ToDoItemCard> {
                 margin: EdgeInsets.only(top: 15),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  color: false ? LColors.primaryColor : Colors.transparent,
-                  boxShadow: false
-                      ? [
-                          BoxShadow(
-                              color: LColors.black.withOpacity(0.1),
-                              offset: Offset(2, 4),
-                              blurRadius: 7)
-                        ]
-                      : [],
+                  color: Colors.transparent,
                 ),
                 child: Row(
                   children: [
@@ -104,34 +99,22 @@ class _ToDoItemCardState extends State<ToDoItemCard> {
                                     size: 15,
                                   ),
                                 )
-                              : Stack(
-                                  children: [
-                                    Container(
-                                      margin: EdgeInsets.all(2),
-                                      decoration: BoxDecoration(
-                                        border: widget.toDo.isDone == 1
-                                            ? Border.all()
-                                            : Border.all(
-                                                style: BorderStyle.solid,
-                                                color: LColors.grey,
-                                                width: 1,
-                                              ),
-                                        borderRadius: BorderRadius.circular(5),
-                                        color: widget.toDo.isDone == 1
-                                            ? LColors.primaryColor
-                                            : Colors.transparent,
-                                      ),
-                                      // width: 25,
-                                    ),
-                                    Positioned(
-                                      bottom: 0,
-                                      right: 0,
-                                      child: CircleAvatar(
-                                        radius: 5,
-                                        backgroundColor: LColors.primaryColor,
-                                      ),
-                                    ),
-                                  ],
+                              : Container(
+                                  margin: EdgeInsets.all(2),
+                                  decoration: BoxDecoration(
+                                    border: widget.toDo.isDone == 1
+                                        ? Border.all()
+                                        : Border.all(
+                                            style: BorderStyle.solid,
+                                            color: LColors.grey,
+                                            width: 1,
+                                          ),
+                                    borderRadius: BorderRadius.circular(5),
+                                    color: widget.toDo.isDone == 1
+                                        ? LColors.primaryColor
+                                        : Colors.transparent,
+                                  ),
+                                  // width: 25,
                                 ),
                         ),
                       ),

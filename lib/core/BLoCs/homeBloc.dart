@@ -15,17 +15,34 @@ class HomeBloc {
   final StreamController<List<ToDo>> _todoListController =
       StreamController<List<ToDo>>.broadcast();
 
+  final StreamController<DateTime> _date =
+      StreamController<DateTime>.broadcast();
+
+  Stream<DateTime> get dateT => _date.stream;
   Stream<List<ToDo>> get todoList => _todoListController.stream;
+
+  setDate(DateTime dates) {
+    date = dates;
+    _date.sink.add(dates);
+  }
 
   getTodos() async {
     _todoListController.sink.add(
         await DBProvider.db.getAllToDos(DateFormat("yyyy-MM-dd").format(date)));
   }
 
-  push(context) async {
-    Navigator.of(context).pushNamed('/create_task').then((value) async {
-      getTodos();
-    });
+  push(context, String name, [dynamic args]) async {
+    if (args == null) {
+      Navigator.of(context).pushNamed(name).then((value) async {
+        getTodos();
+      });
+    } else {
+      Navigator.of(context)
+          .pushNamed(name, arguments: args)
+          .then((value) async {
+        getTodos();
+      });
+    }
   }
 
   dispose() {
