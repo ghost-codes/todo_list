@@ -11,7 +11,6 @@ import 'package:uuid/uuid.dart';
 import 'package:intl/intl.dart';
 
 class CreateToDoBloc {
-  final homeBloc = sl<HomeBloc>();
   CreateToDoBloc() {
     getActivities();
   }
@@ -48,22 +47,29 @@ class CreateToDoBloc {
     _tempDate.sink.add(date);
   }
 
+  //get all activities from Database
   getActivities() async {
     _activityList.sink.add(await DBProvider.db.getAllActivites());
   }
 
+  //set Activity name in temp Activity
   activityName(String val) {
     tempActivity.name = val;
   }
 
+  // set description in temp Activity
   activityDescription(String val) {
     tempActivity.description = val;
   }
 
+  //disposing of streams when view is closed
   dispose() {
     _activityList.close();
+    _tempActivity.close();
+    _tempDate.close();
   }
 
+  //creating and save Activity object in DB
   createActivity(context) async {
     var form = activityKey.currentState;
     if (form.validate()) {
@@ -104,6 +110,7 @@ class CreateToDoBloc {
     _tempTodo.datetime = f.format(val);
   }
 
+//creating and Saving ToDo object in DB
   createTodo(context) async {
     final form = todoKey.currentState;
     if (form.validate()) {

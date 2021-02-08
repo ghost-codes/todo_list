@@ -11,6 +11,7 @@ class EditTodoBloc {
 
   final todoKey = GlobalKey<FormState>();
 
+  //update Todo Object in DB
   editTodo(context) async {
     final form = todoKey.currentState;
     if (form.validate()) {

@@ -5,7 +5,6 @@ import 'package:todo_list/ui/views/edit_todo.dart';
 import 'package:todo_list/ui/views/exportViews.dart';
 
 void main() {
-  setupLocator();
   runApp(MyApp());
 }
 
