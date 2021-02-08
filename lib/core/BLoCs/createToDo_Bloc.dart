@@ -48,10 +48,12 @@ class CreateToDoBloc {
     _tempDate.sink.add(date);
   }
 
+  //get all activities from Database
   getActivities() async {
     _activityList.sink.add(await DBProvider.db.getAllActivites());
   }
 
+  //set Activity name in temp Activity
   activityName(String val) {
     tempActivity.name = val;
   }
