@@ -21,6 +21,7 @@ class HomeBloc {
   Stream<DateTime> get dateT => _date.stream;
   Stream<List<ToDo>> get todoList => _todoListController.stream;
 
+  //setting date to filter ToDos
   setDate(DateTime dates) {
     date = dates;
     _date.sink.add(dates);
@@ -31,6 +32,7 @@ class HomeBloc {
         await DBProvider.db.getAllToDos(DateFormat("yyyy-MM-dd").format(date)));
   }
 
+  //push to a named route with argumest then update view when Navigator stack is popped
   push(context, String name, [dynamic args]) async {
     if (args == null) {
       Navigator.of(context).pushNamed(name).then((value) async {
@@ -45,16 +47,20 @@ class HomeBloc {
     }
   }
 
+//closing all streams
   dispose() {
     _todoListController.close();
+    _date.close();
   }
 
+  //delete specific task with respect to its id
   deleteWithId(String id, context) async {
     await DBProvider.db.deleteToDo(id);
     Navigator.of(context).pop();
     getTodos();
   }
 
+//set task to done
   taskIsDone(ToDo todo) async {
     await DBProvider.db.updateToDo(todo);
     getTodos();
